@@ -22,3 +22,6 @@
 - Edit validation to be case-insensitive when validating the request's country codes
 - Use a VideoResource to encapsulate logic about video properties to expose in the api
 - Cache warm up with command scheduling to help prevent users in the unlikely scenario they get a cache miss
+- Queries to Wiki API for country descriptions rely on hardcoded list of country titles. This should be updated so that Wiki country titles are not hardcoded but automatically associated from the ISO country codes
+- Create a constant for redis keys to help with maintainability and prevent risks 
+- Add message from guzzle exceptions into our custom exceptions to provide further context
