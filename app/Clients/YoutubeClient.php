@@ -4,6 +4,7 @@ namespace App\Clients;
 
 use App\Exceptions\YoutubeClientException;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 class YoutubeClient
 {
@@ -17,16 +18,25 @@ class YoutubeClient
         $this->apikey = env('YOUTUBE_APIKEY');
     }
 
-    public function getPopular(string $countryCode): array
+    /**
+     * @throws YoutubeClientException
+     */
+    public function getPopular(string $countryCode, string $pageToken = null): array
     {
         $url = sprintf('%s?%s',$this->baseUrl, http_build_query([
             'part' => 'snippet',
             'chart' =>  'mostPopular',
             'regionCode' => $countryCode,
             'key' => $this->apikey,
+            'maxResults' => 50,
+            ...(['pageToken' => $pageToken] ?: []),
         ]));
 
-        $response = $this->httpClient->get($url);
+        try {
+            $response = $this->httpClient->get($url);
+        } catch (GuzzleException $e) {
+            throw new YoutubeClientException($e->getMessage());
+        }
 
         if ($response->getStatusCode() !== 200) {
             throw new YoutubeClientException('Youtube API returned error status code ' . $response->getStatusCode());
@@ -38,6 +48,6 @@ class YoutubeClient
             throw new YoutubeClientException('Youtube API response can not be decoded or has too much nesting depth');
         }
 
-        return $response['items'];
+        return $response;
     }
 }

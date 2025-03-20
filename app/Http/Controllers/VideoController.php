@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\DTOs\Video;
+use App\Exceptions\YoutubeClientException;
 use App\Http\Requests\ListVideosRequest;
-use App\Services\VideoService;
+use App\Services\YoutubeVideoService;
 use App\Services\WikiService;
 
 class VideoController extends Controller
 {
-    private VideoService $videoService;
+    private YoutubeVideoService $videoService;
     private WikiService $wikiService;
     private int $itemsPerPage = 10;
 
-    public function __construct(VideoService $videoService, WikiService $wikiService)
+    public function __construct(YoutubeVideoService $videoService, WikiService $wikiService)
     {
         $this->videoService = $videoService;
         $this->wikiService = $wikiService;
     }
 
+    /**
+     * @throws YoutubeClientException
+     */
     public function index(ListVideosRequest $request): array
     {
         $offset = $this->determineOffset($request);
@@ -33,7 +36,10 @@ class VideoController extends Controller
 
         return [
             "countryDescription" => $countryDescription,
-            "videos" => $popularVideos->toArray(),
+            "videos" => [
+                'total' => $popularVideos->totalCount,
+                'data' => $popularVideos->toArray(),
+            ],
         ];
     }
 
