@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\WikiClientException;
 use App\Exceptions\YoutubeClientException;
 use App\Http\Requests\ListVideosRequest;
 use App\Services\YoutubeVideoService;
 use App\Services\WikiService;
+use GuzzleHttp\Exception\GuzzleException;
 
 class VideoController extends Controller
 {
@@ -21,6 +23,8 @@ class VideoController extends Controller
 
     /**
      * @throws YoutubeClientException
+     * @throws WikiClientException
+     * @throws GuzzleException
      */
     public function index(ListVideosRequest $request): array
     {
