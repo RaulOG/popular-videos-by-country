@@ -1,2 +1,0 @@
-- Edit validation to be case-insensitive when validating the request's country codes 
-- Use a VideoResource to encapsulate logic about video properties to expose in the api
