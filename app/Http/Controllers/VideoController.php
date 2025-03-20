@@ -32,7 +32,7 @@ class VideoController extends Controller
             offset: $offset,
         );
 
-        $countryDescription = $this->wikiService->getCountryDescription();
+        $countryDescription = $this->wikiService->getCountryDescription(countryCode: $request->input('country'));
 
         return [
             "countryDescription" => $countryDescription,

@@ -2,10 +2,19 @@
 
 namespace App\Services;
 
+use App\Clients\WikiClient;
+
 class WikiService
 {
-    public function getCountryDescription(): string
+    private WikiClient $wikiClient;
+
+    public function __construct(WikiClient $wikiClient)
     {
-        return '';
+        $this->wikiClient = $wikiClient;
+    }
+
+    public function getCountryDescription(string $countryCode): string
+    {
+        return $this->wikiClient->get(config("countries.$countryCode"));
     }
 }

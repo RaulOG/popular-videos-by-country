@@ -3,16 +3,16 @@
 namespace App\Clients;
 
 use App\Exceptions\YoutubeClientException;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 
 class YoutubeClient
 {
-    private Client $httpClient;
+    private GuzzleClient $httpClient;
     private string $apikey;
     private string $baseUrl = 'https://youtube.googleapis.com/youtube/v3/videos';
 
-    public function __construct(Client $httpClient)
+    public function __construct(GuzzleClient $httpClient)
     {
         $this->httpClient = $httpClient;
         $this->apikey = env('YOUTUBE_APIKEY');
@@ -23,7 +23,7 @@ class YoutubeClient
      */
     public function getPopular(string $countryCode, string $pageToken = null): array
     {
-        $url = sprintf('%s?%s',$this->baseUrl, http_build_query([
+        $url = sprintf('%s?%s', $this->baseUrl, http_build_query([
             'part' => 'snippet',
             'chart' =>  'mostPopular',
             'regionCode' => $countryCode,
