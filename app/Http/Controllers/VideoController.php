@@ -33,13 +33,7 @@ class VideoController extends Controller
 
         return [
             "countryDescription" => $countryDescription,
-            "videos" => $popularVideos->map(function (Video $video) {
-                return [
-                    'description' => $video->getDescription(),
-                    'thumbnail_normal_resolution' => $video->getThumbnailNormalResolution(),
-                    'thumbnail_high_resolution' => $video->getThumbnailHighResolution(),
-                ];
-            }),
+            "videos" => $popularVideos->toArray(),
         ];
     }
 

@@ -2,26 +2,40 @@
 
 namespace App\Services;
 
-use App\DTOs\Video;
+use App\Clients\YoutubeClient;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class VideoService
 {
+    private YoutubeClient $videoClient;
+
+    public function __construct(YoutubeClient $videoClient)
+    {
+        $this->videoClient = $videoClient;
+    }
+
     public function getPopularByCountryCode(string $countryCode, int $amount, int $offset = 0): Collection
     {
-        $videos = collect([]);
+        $videos = Cache::get("popular.$countryCode");
 
-        $video = new Video();
-        $video->setDescription('kittens');
-        $video->setThumbnailNormalResolution('kittens.normal_resolution');
-        $video->setThumbnailHighResolution('kittens.high_resolution');
-        $videos->add($video);
+        if (!is_null($videos)) {
+            return $videos;
+        }
 
-        $video = new Video();
-        $video->setDescription('dogs');
-        $video->setThumbnailNormalResolution('dogs.normal_resolution');
-        $video->setThumbnailHighResolution('dogs.high_resolution');
-        $videos->add($video);
+        $videos = collect($this->videoClient->getPopular($countryCode))->map(function ($video) {
+            return [
+                'description' => $video['snippet']['description'],
+                'thumbnail_medium_resolution' => $video['snippet']['thumbnails']['medium']['url'],
+                'thumbnail_high_resolution' => $video['snippet']['thumbnails']['high']['url'],
+            ];
+        });
+
+        Cache::put(
+            key: "popular.$countryCode",
+            value: $videos,
+            ttl: now()->addMinutes(10),
+        );
 
         return $videos;
     }
