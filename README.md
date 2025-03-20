@@ -1,6 +1,6 @@
 # Installation
-- `docker-compose up -d`
 - `composer install`
+- `./vendor/bin/sail up -d`
 - `cp .env.example .env`
 - Fill .env.example's `YOUTUBE_APIKEY`
 
