@@ -6,7 +6,7 @@
 - Fill .env.example's `YOUTUBE_APIKEY`
 
 # Testing
-- Query `http://localhost/api/videos`
+- Query `http://localhost/api/videos` and send the `Accept` header with `application/json`
 - You may add the following query parameters
   - (integer, optional) `offset`
   - (integer, optional) `page`
