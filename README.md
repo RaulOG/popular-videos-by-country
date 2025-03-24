@@ -2,6 +2,7 @@
 - `composer install`
 - `./vendor/bin/sail up -d`
 - `cp .env.example .env`
+- `php artisan key:generate`
 - Fill .env.example's `YOUTUBE_APIKEY`
 
 # Testing
